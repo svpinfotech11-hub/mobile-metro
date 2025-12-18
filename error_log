@@ -1,0 +1,53 @@
+[05-Sep-2025 05:50:38 America/Chicago] PHP Warning:  require(/home2/omastlyo/54kidsstreet.org/../vendor/autoload.php): Failed to open stream: No such file or directory in /home2/omastlyo/54kidsstreet.org/index.php on line 34
+[05-Sep-2025 05:50:38 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home2/omastlyo/54kidsstreet.org/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php83/root/usr/share/pear') in /home2/omastlyo/54kidsstreet.org/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home2/omastlyo/54kidsstreet.org/index.php on line 34
+[06-Nov-2025 04:14:22 America/Chicago] PHP Warning:  require(/home2/omastlyo/54kidsstreet.org/vendor/composer/../rmccue/requests/library/Deprecated.php): Failed to open stream: No such file or directory in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php on line 41
+[06-Nov-2025 04:14:22 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home2/omastlyo/54kidsstreet.org/vendor/composer/../rmccue/requests/library/Deprecated.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php(45): {closure}('941748b3c8cae44...', '/home2/omastlyo...')
+#1 /home2/omastlyo/54kidsstreet.org/vendor/autoload.php(22): ComposerAutoloaderInitfe33f98a750b8c5a51b30c78bd3fab21::getLoader()
+#2 /home2/omastlyo/54kidsstreet.org/index.php(34): require('/home2/omastlyo...')
+#3 {main}
+  thrown in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php on line 41
+[06-Nov-2025 04:14:22 America/Chicago] PHP Warning:  require(/home2/omastlyo/54kidsstreet.org/vendor/composer/../rmccue/requests/library/Deprecated.php): Failed to open stream: No such file or directory in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php on line 41
+[06-Nov-2025 04:14:22 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home2/omastlyo/54kidsstreet.org/vendor/composer/../rmccue/requests/library/Deprecated.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php(45): {closure}('941748b3c8cae44...', '/home2/omastlyo...')
+#1 /home2/omastlyo/54kidsstreet.org/vendor/autoload.php(22): ComposerAutoloaderInitfe33f98a750b8c5a51b30c78bd3fab21::getLoader()
+#2 /home2/omastlyo/54kidsstreet.org/index.php(34): require('/home2/omastlyo...')
+#3 {main}
+  thrown in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php on line 41
+[06-Nov-2025 04:14:54 America/Chicago] PHP Warning:  require(/home2/omastlyo/54kidsstreet.org/vendor/composer/../rmccue/requests/library/Deprecated.php): Failed to open stream: No such file or directory in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php on line 41
+[06-Nov-2025 04:14:54 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home2/omastlyo/54kidsstreet.org/vendor/composer/../rmccue/requests/library/Deprecated.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php(45): {closure}('941748b3c8cae44...', '/home2/omastlyo...')
+#1 /home2/omastlyo/54kidsstreet.org/vendor/autoload.php(22): ComposerAutoloaderInitfe33f98a750b8c5a51b30c78bd3fab21::getLoader()
+#2 /home2/omastlyo/54kidsstreet.org/index.php(34): require('/home2/omastlyo...')
+#3 {main}
+  thrown in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php on line 41
+[06-Nov-2025 04:14:56 America/Chicago] PHP Warning:  require(/home2/omastlyo/54kidsstreet.org/vendor/composer/../rmccue/requests/library/Deprecated.php): Failed to open stream: No such file or directory in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php on line 41
+[06-Nov-2025 04:14:56 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home2/omastlyo/54kidsstreet.org/vendor/composer/../rmccue/requests/library/Deprecated.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php(45): {closure}('941748b3c8cae44...', '/home2/omastlyo...')
+#1 /home2/omastlyo/54kidsstreet.org/vendor/autoload.php(22): ComposerAutoloaderInitfe33f98a750b8c5a51b30c78bd3fab21::getLoader()
+#2 /home2/omastlyo/54kidsstreet.org/index.php(34): require('/home2/omastlyo...')
+#3 {main}
+  thrown in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php on line 41
+[06-Nov-2025 04:19:07 America/Chicago] PHP Warning:  require(/home2/omastlyo/54kidsstreet.org/vendor/composer/../rmccue/requests/library/Deprecated.php): Failed to open stream: No such file or directory in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php on line 41
+[06-Nov-2025 04:19:07 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home2/omastlyo/54kidsstreet.org/vendor/composer/../rmccue/requests/library/Deprecated.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php(45): {closure}('941748b3c8cae44...', '/home2/omastlyo...')
+#1 /home2/omastlyo/54kidsstreet.org/vendor/autoload.php(22): ComposerAutoloaderInitfe33f98a750b8c5a51b30c78bd3fab21::getLoader()
+#2 /home2/omastlyo/54kidsstreet.org/index.php(34): require('/home2/omastlyo...')
+#3 {main}
+  thrown in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php on line 41
+[06-Nov-2025 04:19:08 America/Chicago] PHP Warning:  require(/home2/omastlyo/54kidsstreet.org/vendor/composer/../rmccue/requests/library/Deprecated.php): Failed to open stream: No such file or directory in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php on line 41
+[06-Nov-2025 04:19:08 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home2/omastlyo/54kidsstreet.org/vendor/composer/../rmccue/requests/library/Deprecated.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php(45): {closure}('941748b3c8cae44...', '/home2/omastlyo...')
+#1 /home2/omastlyo/54kidsstreet.org/vendor/autoload.php(22): ComposerAutoloaderInitfe33f98a750b8c5a51b30c78bd3fab21::getLoader()
+#2 /home2/omastlyo/54kidsstreet.org/index.php(34): require('/home2/omastlyo...')
+#3 {main}
+  thrown in /home2/omastlyo/54kidsstreet.org/vendor/composer/autoload_real.php on line 41
