@@ -68,10 +68,10 @@
                                 <th>Action</th>
                             </tr>
                             <tr>
-                                <td><input type="text" name="from_cft[]" class="form-control" placeholder="Enter FROM CFT" /></td>
-                                <td><input type="text" name="to_cft[]" class="form-control" placeholder="Enter TO CFT" /></td>
-                                <td><input type="text" name="cft_rate[]" class="form-control" placeholder="Enter CFT RATE" /></td>
-                                <td><input type="text" name="cft_profit[]" class="form-control" placeholder="Enter CFT Profit" /></td>
+                                <td><input type="number" name="from_cft[]" class="form-control" placeholder="Enter FROM CFT" /></td>
+                                <td><input type="number" name="to_cft[]" class="form-control" placeholder="Enter TO CFT" /></td>
+                                <td><input type="number" name="cft_rate[]" class="form-control" placeholder="Enter CFT RATE" /></td>
+                                <td><input type="number" name="cft_profit[]" class="form-control" placeholder="Enter CFT Profit" /></td>
                                 <td>
                                     <select name="rate_type[]" class="form-control">
                                         <option value="">Select</option>

@@ -11,7 +11,7 @@
                         <h3 class="card-title">{{ $title }}</h3>
                     </div>
 
-                    <form 
+                    <!-- <form 
                         action="{{ isset($cftRates) && count($cftRates) ? route('app.admin-cftRate.update', $cftRates[0]->id) : route('app.admin-cftRate.store') }}" 
                         method="POST">
                         @csrf
@@ -34,11 +34,11 @@
                                 <tr>
                                     <td>
                                         <input type="hidden" name="row_id[]" value="{{ $rate->id }}">
-                                        <input type="text" name="from_cft[]" value="{{ $rate->from_cft }}" class="form-control" />
+                                        <input type="number" name="from_cft[]" value="{{ $rate->from_cft }}" class="form-control" />
                                     </td>
-                                    <td><input type="text" name="to_cft[]" value="{{ $rate->to_cft }}" class="form-control" /></td>
-                                    <td><input type="text" name="cft_rate[]" value="{{ $rate->cft_rate }}" class="form-control" /></td>
-                                    <td><input type="text" name="cft_profit[]" value="{{ $rate->cft_profit }}" class="form-control" /></td>
+                                    <td><input type="number" name="to_cft[]" value="{{ $rate->to_cft }}" class="form-control" /></td>
+                                    <td><input type="number" name="cft_rate[]" value="{{ $rate->cft_rate }}" class="form-control" /></td>
+                                    <td><input type="number" name="cft_profit[]" value="{{ $rate->cft_profit }}" class="form-control" /></td>
                                     <td>
                                         <select name="rate_type[]" class="form-control">
                                             <option value="">Select</option>
@@ -51,10 +51,10 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td><input type="text" name="from_cft[]" class="form-control" /></td>
-                                    <td><input type="text" name="to_cft[]" class="form-control" /></td>
-                                    <td><input type="text" name="cft_rate[]" class="form-control" /></td>
-                                    <td><input type="text" name="cft_profit[]" class="form-control" /></td>
+                                    <td><input type="number" name="from_cft[]" class="form-control" /></td>
+                                    <td><input type="number" name="to_cft[]" class="form-control" /></td>
+                                    <td><input type="number" name="cft_rate[]" class="form-control" /></td>
+                                    <td><input type="number" name="cft_profit[]" class="form-control" /></td>
                                     <td>
                                         <select name="rate_type[]" class="form-control">
                                             <option value="">Select</option>
@@ -73,6 +73,48 @@
                         </a>
 
 
+                    </form> -->
+                    <form action="{{ route('app.admin-cftRate.update', $cftRate->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>From CFT</th>
+                                <th>To CFT</th>
+                                <th>Rate</th>
+                                <th>CFT Profit</th>
+                                <th>Rate Type</th>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <input type="number" name="from_cft"
+                                        value="{{ $cftRate->from_cft }}" class="form-control">
+                                </td>
+                                <td>
+                                    <input type="number" name="to_cft"
+                                        value="{{ $cftRate->to_cft }}" class="form-control">
+                                </td>
+                                <td>
+                                    <input type="number" name="cft_rate"
+                                        value="{{ $cftRate->cft_rate }}" class="form-control">
+                                </td>
+                                <td>
+                                    <input type="number" name="cft_profit"
+                                        value="{{ $cftRate->cft_profit }}" class="form-control">
+                                </td>
+                                <td>
+                                    <select name="rate_type" class="form-control">
+                                        <option value="0" {{ $cftRate->rate_type == 0 ? 'selected' : '' }}>Fixed</option>
+                                        <option value="1" {{ $cftRate->rate_type == 1 ? 'selected' : '' }}>PER CFT</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <button type="submit" class="btn btn-primary btn-sm ml-2 mb-3">Update</button>
+                        <a href="{{ route('app.admin-cftRate.index') }}" class="btn btn-secondary btn-sm mb-3">Back</a>
                     </form>
 
                 </div>

@@ -98,8 +98,9 @@ class CFTController extends Controller
     public function edit($id)
     {
         $title = 'Edit CFT Rate';
-        $cftRates = CFTModel::where('id', $id)->get(); // group multiple rows if you have a group logic
-        return view('admin.cft.edit', compact('title', 'cftRates'));
+        $cftRate = CFTModel::findOrFail($id); // group multiple rows if you have a group logic
+
+        return view('admin.cft.edit', compact('title', 'cftRate'));
     }
 
     /**
@@ -109,48 +110,97 @@ class CFTController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // public function update(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'from_cft.*'   => 'required|numeric',
+    //         'to_cft.*'     => 'required|numeric',
+    //         'cft_rate.*'   => 'required|numeric',
+    //         'rate_type.*'  => 'required|string',
+    //     ]);
+
+    //     foreach ($request->from_cft as $key => $from) {
+    //         $from = (int) $from;
+    //         $to = (int) $request->to_cft[$key];
+
+    //         if ($from >= $to) {
+    //             return redirect()->back()->withErrors([
+    //                 "from_cft.$key" => "FROM CFT must be less than TO CFT"
+    //             ])->withInput();
+    //         }
+
+    //         $overlap = CFTModel::where('from_cft', '<=', $to)
+    //             ->where('to_cft', '>=', $from)
+    //             ->exists();
+
+    //         if ($overlap) {
+    //             return redirect()->back()->withErrors([
+    //                 "from_cft.$key" => "The range $from - $to overlaps with an existing range. Enter Other Range"
+    //             ])->withInput();
+    //         }
+
+    //         CFTModel::create([
+    //             'from_cft'   => $from,
+    //             'to_cft'     => $to,
+    //             'cft_rate'   => (int) $request->cft_rate[$key],
+    //             'rate_type'  => $request->rate_type[$key],
+    //             'cft_profit' => (int) ($request->cft_profit[$key] ?? 0)
+    //         ]);
+    //     }
+
+    //     return redirect()
+    //         ->back()
+    //         ->with('success', 'CFT Rates updated successfully!');
+    // }
+
     public function update(Request $request, $id)
     {
         $request->validate([
-            'from_cft.*'   => 'required|numeric',
-            'to_cft.*'     => 'required|numeric',
-            'cft_rate.*'   => 'required|numeric',
-            'rate_type.*'  => 'required|string',
+            'from_cft'   => 'required|numeric',
+            'to_cft'     => 'required|numeric',
+            'cft_rate'   => 'required|numeric',
+            'rate_type'  => 'required|in:0,1',
+            'cft_profit' => 'nullable|numeric',
         ]);
 
-        foreach ($request->from_cft as $key => $from) {
-            $from = (int) $from;
-            $to = (int) $request->to_cft[$key];
+        $from = (int) $request->from_cft;
+        $to   = (int) $request->to_cft;
 
-            if ($from >= $to) {
-                return redirect()->back()->withErrors([
-                    "from_cft.$key" => "FROM CFT must be less than TO CFT"
-                ])->withInput();
-            }
-
-            $overlap = CFTModel::where('from_cft', '<=', $to)
-                ->where('to_cft', '>=', $from)
-                ->exists();
-
-            if ($overlap) {
-                return redirect()->back()->withErrors([
-                    "from_cft.$key" => "The range $from - $to overlaps with an existing range. Enter Other Range"
-                ])->withInput();
-            }
-
-            CFTModel::create([
-                'from_cft'   => $from,
-                'to_cft'     => $to,
-                'cft_rate'   => (int) $request->cft_rate[$key],
-                'rate_type'  => $request->rate_type[$key],
-                'cft_profit' => (int) ($request->cft_profit[$key] ?? 0)
-            ]);
+        if ($from >= $to) {
+            return back()->withErrors([
+                'from_cft' => 'FROM CFT must be less than TO CFT'
+            ])->withInput();
         }
 
-        return redirect()
-            ->back()
-            ->with('success', 'CFT Rates updated successfully!');
+        // ✅ OVERLAP CHECK (exclude current row)
+        $overlap = CFTModel::where('id', '!=', $id)
+            ->where(function ($q) use ($from, $to) {
+                $q->whereBetween('from_cft', [$from, $to])
+                    ->orWhereBetween('to_cft', [$from, $to])
+                    ->orWhere(function ($q2) use ($from, $to) {
+                        $q2->where('from_cft', '<=', $from)
+                            ->where('to_cft', '>=', $to);
+                    });
+            })
+            ->exists();
+
+        if ($overlap) {
+            return back()->withErrors([
+                'from_cft' => "The range $from - $to overlaps with an existing range."
+            ])->withInput();
+        }
+
+        CFTModel::where('id', $id)->update([
+            'from_cft'   => $from,
+            'to_cft'     => $to,
+            'cft_rate'   => (float) $request->cft_rate,
+            'rate_type'  => (int) $request->rate_type,
+            'cft_profit' => (float) ($request->cft_profit ?? 0),
+        ]);
+
+        return back()->with('success', 'CFT Rate updated successfully!');
     }
+
 
 
     /**

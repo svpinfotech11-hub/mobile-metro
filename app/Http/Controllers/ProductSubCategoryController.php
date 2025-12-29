@@ -102,7 +102,15 @@ class ProductSubCategoryController extends Controller
     public function edit($id)
     {
         $subcategory = ProductSubCategory::findOrFail($id);
-        $services = ServiceModel::all();
+        // $services = ServiceModel::all();
+        $services = DB::table('tbl_services as s')
+            ->join('sub_category_tbl as sc', 's.subCategory_id', '=', 'sc.id')
+            ->select(
+                's.id',
+                's.service_name',
+                'sc.sub_categoryname'
+            )
+            ->get();
         return view('admin.product_subcategory.edit', compact('subcategory', 'services'));
     }
 

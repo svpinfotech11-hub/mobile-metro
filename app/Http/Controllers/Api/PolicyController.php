@@ -68,7 +68,7 @@ class PolicyController extends Controller
         $request->validate([
             'type' => 'required',
             'title' => 'required',
-            'content' => 'required',
+            'content' => 'nullable',
 
             'email' => 'nullable|email',
             'email2' => 'nullable',
@@ -111,8 +111,11 @@ class PolicyController extends Controller
             'twitter',
             'linkedin',
             'youtube',
-             'map_location_link',
-        'share_app_link'
+            'map_location_link',
+            'share_app_link',
+            'chat_number',
+            'call_number',
+            'website_link'
         ]);
 
         // PUBLIC FOLDER PATH
@@ -144,7 +147,7 @@ class PolicyController extends Controller
 
         Policy::create($data);
 
-        return redirect()->route('policies.index')
+        return redirect()->route('policies.create')
             ->with('success', 'Policy created successfully.');
     }
 
@@ -216,7 +219,7 @@ class PolicyController extends Controller
         $request->validate([
             'type'    => 'required',
             'title'   => 'required',
-            'content' => 'required',
+            'content' => 'nullable',
 
             'email'   => 'nullable|email',
             'email2'  => 'nullable',
@@ -263,8 +266,11 @@ class PolicyController extends Controller
             'twitter',
             'linkedin',
             'youtube',
-             'map_location_link',
-        'share_app_link'
+            'map_location_link',
+            'share_app_link',
+            'chat_number',
+            'call_number',
+            'website_link'
         ]);
 
         // PUBLIC FOLDER
@@ -396,7 +402,8 @@ class PolicyController extends Controller
             'terms',
             'refund',
             'contact-us',
-            'about-us'
+            'about-us',
+            'home-page'
         ])->get()->keyBy('type');
 
         $contact = $policies['contact-us'] ?? null;
@@ -431,6 +438,7 @@ class PolicyController extends Controller
 
                     'contact1' => $contact->contact1 ?? '',
                     'contact2' => $contact->contact2 ?? '',
+                    'website_link' => $contact->website_link ?? '',
                     'map_location_link' => $contact->map_location_link ?? '',
                     'share_app_link' => $contact->share_app_link ?? '',
 
@@ -466,6 +474,11 @@ class PolicyController extends Controller
                 'about_us' => [
                     'title'   => $policies['about-us']->title ?? '',
                     'content' => $policies['about-us']->content ?? '',
+                ],
+
+                 'home-page' => [
+                    'chat_number'   => $policies['home-page']->chat_number ?? '',
+                    'call_number' => $policies['home-page']->call_number ?? '',
                 ],
             ],
         ]);

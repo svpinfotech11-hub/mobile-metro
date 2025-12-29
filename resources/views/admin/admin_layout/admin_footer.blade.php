@@ -12,6 +12,7 @@
 <!-- REQUIRED SCRIPTS -->
 <!-- jQuery -->
 <script src="{{ asset('') }}admin_assets/plugins/jquery/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <!-- Bootstrap -->
 <script src="{{ asset('') }}admin_assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

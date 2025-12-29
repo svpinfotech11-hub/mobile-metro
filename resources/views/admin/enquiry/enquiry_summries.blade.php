@@ -142,6 +142,25 @@
                                 width: 100%;
                             }
                         }
+                         .mainimg img {
+                            width: 100px;
+                            height: 150px !important;
+                        }
+                         @media(max-width:768px){
+        .mainimg{
+            text-align: center;
+        }
+      
+
+        .header {
+    display: inline !important;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+    }
                     </style>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -157,6 +176,9 @@
                                 <div>
                                     <h2>Packers & Movers</h2>
                                     <p><strong>Invoice / Quotation</strong></p>
+                                </div>
+                                <div class="mainimg">
+                                    <img src="{{ asset('images/mobilemetrologo.jpeg') }}" alt="">
                                 </div>
                                 <div>
                                     <!-- Replace with your logo -->
@@ -192,42 +214,43 @@
                                     <p><strong>Longitude:</strong> {{ $enquiry->drop_lng }}</p>
                                 </div>
 
-                                <div class="section col-md-4">
-                                <h3>Payment Summary</h3>
-                            
-                                <p><strong>Total KM:</strong> {{ $enquiry->km_distance }}</p>
-                            
-                                
-                                <p><strong>Total CFT:</strong> {{ $totalCft }}</p>
-                            
-                                <p><strong>Quotation / Total Amount:</strong> 
-                                    ₹{{ $quotationAmount }}
-                                </p>
-                            
-                                <p><strong>Total Advance Paid:</strong> 
-                                    ₹{{ $advancePaid }}
-                                </p>
-                            
-                                <p><strong>Balance Amount:</strong> 
-                                    ₹{{ $quotationAmount - $advancePaid }}
-                                </p>
-                            
-                                <p><strong>Payment ID:</strong>
-                                    {{ $lastPayment->razorpay_payment_id ?? 'N/A' }}
-                                </p>
-                            
-                                <p><strong>Payment Status:</strong>
-                                    {{ ucfirst($lastPayment->payment_status ?? 'N/A') }}
-                                </p>
-                            
-                                <p><strong>Payment Date:</strong>
-                                    {{ isset($lastPayment->payment_date)
-                                        ? \Carbon\Carbon::parse($lastPayment->payment_date)->format('d-m-Y h:i A')
-                                        : 'N/A'
-                                    }}
-                                </p>
-                                </div>
-                                </div>
+                            <div class="section col-md-4">
+                            <h3>Payment Summary</h3>
+                        
+                            <p><strong>Total KM:</strong> {{ $enquiry->km_distance }}</p>
+                        
+                          
+                        
+                            <p><strong>Total CFT:</strong> {{ $enquiry->total_cft }}</p>
+                        
+                            <p><strong>Quotation / Total Amount:</strong> 
+                                ₹{{ $quotationAmount }}
+                            </p>
+                        
+                            <p><strong>Total Advance Paid:</strong> 
+                                ₹{{ $advancePaid }}
+                            </p>
+                        
+                            <p><strong>Balance Amount:</strong> 
+                                ₹{{ $quotationAmount - $advancePaid }}
+                            </p>
+                        
+                            <p><strong>Payment ID:</strong>
+                                {{ $lastPayment->razorpay_payment_id ?? 'N/A' }}
+                            </p>
+                        
+                            <p><strong>Payment Status:</strong>
+                                {{ ucfirst($lastPayment->payment_status ?? 'N/A') }}
+                            </p>
+                        
+                            <p><strong>Payment Date:</strong>
+                                {{ isset($lastPayment->payment_date)
+                                    ? \Carbon\Carbon::parse($lastPayment->payment_date)->format('d-m-Y h:i A')
+                                    : 'N/A'
+                                }}
+                            </p>
+                            </div>
+                            </div>
 
                             <!-- Items -->
                             <div class="section">
@@ -273,76 +296,77 @@
                                     CFT BASED CHARGES SECTION
                                 =========================== -->
                          
-                                <table class="enquiry-summary charges-table">
+                               <table class="enquiry-summary charges-table">
+                                <tr class="section-header bg-light-green">
+                                    <td colspan="6">CFT BASED CHARGES</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td colspan="3" style="text-align:right;">TOTAL CFT :</td>
+                                    <td colspan="3">{{ number_format($enquiry->total_cft) }}</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td colspan="3" style="text-align:right;">RATE TYPE :</td>
+                                    <td colspan="3">{{ $enquiry->cft_rate_type }}</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td colspan="3" style="text-align:right;">CFT RATE :</td>
+                                    <td colspan="3">{{ number_format($enquiry->cft_rate) }}</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td colspan="3" style="text-align:right;">CFT PROFIT :</td>
+                                    <td colspan="3">{{ number_format($enquiry->cft_profit) }}</td>
+                                </tr>
+                            
+                                <tr class="totals-row">
+                                    <td colspan="3" style="text-align:right; font-weight:600;">
+                                        TOTAL CFT COST :
+                                    </td>
+                                    <td colspan="3">{{ number_format($enquiry->total_cft_cost) }}</td>
+                                </tr>
+                            </table>
 
-                                    <tr class="section-header bg-light-green">
-                                        <td colspan="6">CFT BASED CHARGES</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="3" style="text-align:right;">TOTAL CFT :</td>
-                                        <td colspan="3">{{ number_format($enquiry->total_cft) }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="3" style="text-align:right;">RATE TYPE :</td>
-                                        <td colspan="3">{{ $rateType }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="3" style="text-align:right;">CFT RATE :</td>
-                                        <td colspan="3">{{ number_format($cftRate) }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="3" style="text-align:right;">CFT PROFIT :</td>
-                                        <td colspan="3">{{ number_format($cftProfit) }}</td>
-                                    </tr>
-
-                                    <tr class="totals-row">
-                                        <td colspan="3" style="text-align:right; font-weight:600;">
-                                            TOTAL CFT COST :
-                                        </td>
-                                        <td colspan="3">{{ number_format($totalCftCost) }}</td>
-                                    </tr>
-
-                                </table>
 
 
                                 <!-- ===========================
                                     DISTANCE BASED CHARGES
                                 =========================== -->
-                                <table class="enquiry-summary charges-table">
+                               <table class="enquiry-summary charges-table">
+                                <tr class="section-header bg-light-green">
+                                    <td colspan="6">DISTANCE BASED CHARGES</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td colspan="3" style="text-align:right;">DISTANCE (KM):</td>
+                                    <td colspan="3">{{ number_format($enquiry->km_distance) }} KM</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td colspan="3" style="text-align:right;">RATE TYPE:</td>
+                                    <td colspan="3">{{ $enquiry->km_rate_type }}</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td colspan="3" style="text-align:right;">KM RATE:</td>
+                                    <td colspan="3">{{ number_format($enquiry->km_rate) }}</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td colspan="3" style="text-align:right;">KM PROFIT:</td>
+                                    <td colspan="3">{{ number_format($enquiry->km_profit) }}</td>
+                                </tr>
+                            
+                                <tr class="totals-row">
+                                    <td colspan="3" style="text-align:right; font-weight:600;">
+                                        TOTAL KM COST :
+                                    </td>
+                                    <td colspan="3">{{ number_format($enquiry->total_km_cost) }}</td>
+                                </tr>
+                            </table>
 
-                                    <tr class="section-header bg-light-green">
-                                        <td colspan="6">DISTANCE BASED CHARGES</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="3" style="text-align:right;">DISTANCE (KM):</td>
-                                        <td colspan="3">{{ number_format($enquiry->km_distance) }} KM</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="3" style="text-align:right;">RATE TYPE:</td>
-                                        <td colspan="3">PER KM</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="3" style="text-align:right;">KM RATE:</td>
-                                        <td colspan="3">{{ number_format($enquiry->km_rate) }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="3" style="text-align:right;">KM PROFIT:</td>
-                                        <td colspan="3">{{ number_format($enquiry->km_profit ?? 0) }}</td>
-                                    </tr>
-
-                                    <tr class="totals-row">
-                                        <td colspan="3" style="text-align:right; font-weight:600;">TOTAL KM COST :</td>
-                                        <td colspan="3">{{ number_format($enquiry->total_km_cost) }}</td>
-                                    </tr>
-                                </table>
 
 
                                 <!-- ===========================

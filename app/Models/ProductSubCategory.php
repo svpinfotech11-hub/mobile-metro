@@ -21,4 +21,16 @@ class ProductSubCategory extends Model
     {
         return $this->belongsTo(ServiceModel::class, 'service_id');
     }
+
+    public function productSubcategories()
+    {
+        return $this->belongsToMany(
+            ProductSubCategory::class,
+            'enquiry_product_subcategories',
+            'user_enquiry_id',
+            'product_subcategory_id'
+        );
+    }
+
+    
 }

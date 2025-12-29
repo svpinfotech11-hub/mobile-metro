@@ -60,6 +60,7 @@
                                         <option value="refund">Refund</option>
                                         <option value="contact-us">Contact Us</option>
                                         <option value="about-us">About Us</option>
+                                        <option value="home-page">Home Page</option>
                                     </select>
                                 </div>
 
@@ -70,7 +71,7 @@
                                 </div>
 
                                 {{-- Content --}}
-                                <div class="col-md-12 mb-3">
+                                <div class="col-md-12 mb-3" id="contentField">
                                     <label for="content" class="form-label">Content</label>
                                     <textarea name="content" id="content" class="form-control" rows="5" placeholder="Write policy content..." required></textarea>
                                 </div>
@@ -107,15 +108,23 @@
                                             <input type="text" name="contact2" class="form-control">
                                         </div>
 
+                                        <div class="col-md-4 mb-3">
+                                        <label>Website Link</label>
+                                        <input type="text" name="website_link" value="{{ old('website_link') }}" class="form-control">
+                                        </div>
+                                        
+                                        </div>
+
                                         <hr>
 
-                                        {{-- FACEBOOK --}}
-                                        <div class="col-md-4 mb-3">
+                                       <div class="row">
+                                         {{-- FACEBOOK --}}
+                                        <div class="col-md-6 mb-3">
                                             <label>Facebook URL</label>
                                             <input type="text" name="facebook" class="form-control">
                                         </div>
 
-                                        <div class="col-md-4 mb-3">
+                                        <div class="col-md-6 mb-3">
                                             <label>Facebook Icon (PNG/JPG/SVG)</label>
                                             <input type="file" name="facebook_icon" class="form-control"
                                                 accept=".png,.jpg,.jpeg,.svg">
@@ -170,24 +179,45 @@
                                         </div>
 
 
-                                         {{-- YOUTUBE --}}
+                                         {{-- Share Location Url --}}
                                         <div class="col-md-4 mb-3">
                                             <label>Share Location Url</label>
                                             <input type="text" name="map_location_link" class="form-control">
                                         </div>
 
 
-                                         {{-- YOUTUBE --}}
+                                         {{-- Share App Link --}}
                                         <div class="col-md-4 mb-3">
                                             <label>Share App Link</label>
                                             <input type="text" name="share_app_link" class="form-control">
                                         </div>
+                                       </div>
 
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
 
-                            </div>
-                        </div>
+
+                                {{-- Home Page Fields --}}
+                            <div id="homePageFields" style="display:none;">
+                                <hr>
+
+                                <div class="row mt-3">
+
+                                     <div class="col-md-6 mb-3">
+                                        <label>Call Us Number</label>
+                                        <input type="text" name="call_number" class="form-control"
+                                            placeholder="+1 234 567 890">
+                                     </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label>Chat With Us Number</label>
+                                        <input type="text" name="chat_number" class="form-control"
+                                            placeholder="+1 234 567 890">
+                                    </div>
+                                </div>
+                                </div>
+                                </div>
+                                </div>
 
                         <button type="submit" class="btn btn-primary ml-4 btn-sm mb-4">Submit</button>
                     </form>
@@ -254,7 +284,7 @@
         </div><!-- /.container-fluid -->
     </div>
 </section>
-<script>
+<!-- <script>
     document.getElementById('type').addEventListener('change', function() {
         if (this.value === 'contact-us') {
             document.getElementById('contactFields').style.display = 'block';
@@ -262,7 +292,7 @@
             document.getElementById('contactFields').style.display = 'none';
         }
     });
-</script>
+</script> -->
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
     ClassicEditor
@@ -270,6 +300,47 @@
         .catch(error => {
             console.error(error);
         });
+</script>
+
+
+<script>
+    function togglePolicyFields() {
+        const typeSelect = document.getElementById('type');
+        const type = typeSelect.value;
+
+        const contactFields = document.getElementById('contactFields');
+        const homePageFields = document.getElementById('homePageFields');
+        const contentField = document.getElementById('contentField');
+        const contentInput = document.getElementById('content');
+        const titleInput = document.getElementById('title');
+
+        // Reset all
+        contactFields.style.display = 'none';
+        homePageFields.style.display = 'none';
+        contentField.style.display = 'block';
+        contentInput.required = true;
+
+        if (type === 'contact-us') {
+            contactFields.style.display = 'block';
+            contentField.style.display = 'none';
+            contentInput.required = false;
+        }
+
+        if (type === 'home-page') {
+            homePageFields.style.display = 'block';
+            contentField.style.display = 'none';
+            contentInput.required = false;
+        }
+
+        // Auto title
+        const selectedOption = typeSelect.options[typeSelect.selectedIndex];
+        if (selectedOption?.dataset.title && !titleInput.value) {
+            titleInput.value = selectedOption.dataset.title;
+        }
+    }
+
+    document.getElementById('type').addEventListener('change', togglePolicyFields);
+    document.addEventListener('DOMContentLoaded', togglePolicyFields);
 </script>
 
 

@@ -532,7 +532,7 @@ class EnquiryController extends Controller
 
             $item->products_item = $products;
             $item->total_cft = $totalCft;
-            $item->created_date = $item->created_at->format('Y-m-d H:i:s');
+            $item->created_date = $item->created_at;
 
             // Add total payments amount
             $item->total_paid = $item->payments->sum('amount');
@@ -562,7 +562,7 @@ class EnquiryController extends Controller
                     'razorpay_payment_id' => $payment->razorpay_payment_id, // ADDED
                     'payment_date' => $payment->payment_date,               // ADDED
                     'paid' => $payment->is_paid,
-                    'created_at' => $payment->created_at->format('Y-m-d H:i:s'),
+                    'created_at' => $payment->created_at,
                 ];
             });
 

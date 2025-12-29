@@ -13,6 +13,8 @@ use App\Models\Payment;
 
 class EnquiryController extends Controller
 {
+ 
+    
      public function index(Request $request)
     {
         $title = 'Enquiry Details';
@@ -79,7 +81,7 @@ class EnquiryController extends Controller
      * @return \Illuminate\Http\Response
      */
  
-
+    
     public function show($id)
     {
         $title = 'Enquiry Summaries';
@@ -95,69 +97,64 @@ class EnquiryController extends Controller
     
         /* -------------------- Decode Products -------------------- */
         $items = [];
-        if (!empty($enquiry->products_item)) {
-            $json = trim($enquiry->products_item, '"');
-            $json = stripslashes($json);
-            $items = json_decode($json, true) ?? [];
-        }
-    
-        /* -------------------- 1️⃣ Calculate TOTAL CFT -------------------- */
         $totalCft = 0;
     
-        foreach ($items as &$item) {
+        if (!empty($enquiry->products_item)) {
+            $items = json_decode($enquiry->products_item, true) ?? [];
     
-            $product = DB::table('tbl_product')
-                ->whereRaw('LOWER(product_name) LIKE ?', [
-                    '%' . strtolower(trim($item['product_name'] ?? '')) . '%'
-                ])
-                ->first();
+            foreach ($items as &$item) {
+                $productCft = (float) ($item['product_cft'] ?? 0);
+                $quantity   = (int) ($item['quantity'] ?? 1);
     
-            if (!$product) {
-                $item['product_cft'] = 0;
-                $item['total_cft']   = 0;
-                continue;
+                $item['product_cft'] = $productCft;
+                $item['quantity']    = $quantity;
+                $item['total_cft']   = $productCft * $quantity;
+    
+                $totalCft += $item['total_cft'];
             }
-    
-            $productCft = (float) $product->product_cft;
-            $quantity   = (int) ($item['quantity'] ?? 1);
-    
-            $item['product_cft'] = $productCft;
-            $item['total_cft']   = $productCft * $quantity;
-    
-            $totalCft += $item['total_cft'];
         }
     
-        /* -------------------- 2️⃣ Apply CFT Slab ONCE -------------------- */
+        /* -------------------- CFT SLAB (ONCE) -------------------- */
         $cftRateDetails = $this->getCftRate($totalCft);
     
-        $rateType     = strtoupper($cftRateDetails['rate_type']);
-        $cftRate      = $cftRateDetails['cft_rate'];
-        $cftProfit    = $cftRateDetails['cft_profit'];
-        $totalCftCost = $cftRateDetails['total_cost'];
+         $enquiry->cft_id          = $cftRateDetails['cft_id']; // ✅
+        $enquiry->cft_rate_type      = strtoupper($cftRateDetails['rate_type']);
+        $enquiry->cft_rate       = (float) $cftRateDetails['cft_rate'];
+        $enquiry->cft_profit     = (float) $cftRateDetails['cft_profit'];
+        $enquiry->total_cft_cost = (float) $cftRateDetails['total_cost'];
     
-        /* -------------------- Assign same rate to items (display only) --- */
+        /* -------------------- Assign slab to items (display only) -------------------- */
         foreach ($items as &$item) {
-            $item['rate_type']  = $rateType;
-            $item['cft_rate']   = $cftRate;
-            $item['cft_profit'] = $cftProfit;
+            $item['rate_type']  = $enquiry->rate_type;
+            $item['cft_rate']   = $enquiry->cft_rate;
+            $item['cft_profit'] = $enquiry->cft_profit;
         }
     
-        /* -------------------- 3️⃣ KM Calculation -------------------- */
-        $cftId = $this->getCftId($totalCft);
-        $kmDistance = $enquiry->km_distance ?? 0;
-        $kmRateDetails = $this->getKmRate($kmDistance, $cftId);
+        /* -------------------- KM CALCULATION -------------------- */
+        $kmDistance = (float) ($enquiry->km_distance ?? 0);
     
-        /* -------------------- 4️⃣ Final Totals -------------------- */
+        // Use first product CFT for KM slab
+        // $cftId = $items[0]['product_cft'] ?? 0;
+    
+       $cftId = $enquiry->cft_id;
+       $kmRateDetails = $this->getKmRate($kmDistance, $cftId);
+
+        // dd($kmRateDetails);
+        /* 🔹 Assign */
+        $enquiry->km_distance    = round($kmDistance, 2);
+        $enquiry->km_rate        = (float) $kmRateDetails['km_rate'];
+        $enquiry->km_profit      = (float) $kmRateDetails['km_profit'];
+        $enquiry->km_rate_type  = strtoupper($kmRateDetails['rate_type']);
+        $enquiry->total_km_cost  = (float) $kmRateDetails['total_km_cost'];
+    
+        /* -------------------- FINAL TOTALS -------------------- */
         $enquiry->items            = $items;
         $enquiry->total_cft        = round($totalCft, 2);
-        $enquiry->total_amount     = round($totalCftCost, 2);
-        $enquiry->total_km_cost    = round($kmRateDetails['total_km_cost'], 2);
-        $enquiry->grand_total_cost = $enquiry->total_amount + $enquiry->total_km_cost;
-    
-        $enquiry->km_distance  = $kmDistance;
-        $enquiry->km_profit = $kmRateDetails['km_profit'];
-        $enquiry->km_rate      = $kmRateDetails['km_rate'];
-        $enquiry->km_rate_type = $kmRateDetails['rate_type'];
+        $enquiry->total_amount     = round($enquiry->total_cft_cost, 2);
+        $enquiry->grand_total_cost = round(
+         $enquiry->total_amount + $enquiry->total_km_cost,
+            
+        );
     
         /* -------------------- Payments -------------------- */
         $allPayments = Payment::where('enquiry_id', $id)
@@ -170,6 +167,7 @@ class EnquiryController extends Controller
         $quotationAmount = $lastPayment
             ? $lastPayment->total_amount
             : $enquiry->total_amount;
+            
     
         return view(
             'admin.enquiry.enquiry_summries',
@@ -180,14 +178,98 @@ class EnquiryController extends Controller
                 'allPayments',
                 'lastPayment',
                 'advancePaid',
-                'quotationAmount',
-                'totalCftCost',
-                'rateType',
-                'cftRate',
-                'cftProfit'
+                'quotationAmount'
             )
         );
     }
+
+
+     public function fieldReport($id)
+{
+    $title = 'Enquiry Summaries';
+
+    $enquiry = DB::table('tbl_enquiry')->where('id', $id)->first();
+    if (!$enquiry) {
+        abort(404, 'Enquiry Not Found');
+    }
+
+    $customer = DB::table('tbl_customer')
+        ->where('id', $enquiry->customer_id)
+        ->first();
+
+    /* -------------------- Decode Products -------------------- */
+    $items = [];
+    $totalCft = 0;
+
+    if (!empty($enquiry->products_item)) {
+        $items = json_decode($enquiry->products_item, true) ?? [];
+
+        foreach ($items as &$item) {
+            $productCft = (float) ($item['product_cft'] ?? 0);
+            $quantity   = (int) ($item['quantity'] ?? 1);
+
+            $item['product_cft'] = $productCft;
+            $item['quantity']    = $quantity;
+            $item['total_cft']   = $productCft * $quantity;
+
+            $totalCft += $item['total_cft'];
+        }
+    }
+
+    /* -------------------- CFT SLAB -------------------- */
+    $cftRateDetails = $this->getCftRate($totalCft);
+
+    $enquiry->cft_id          = $cftRateDetails['cft_id']; // ✅ always set
+    $enquiry->cft_rate_type   = strtoupper($cftRateDetails['rate_type']);
+    $enquiry->cft_rate        = (float) $cftRateDetails['cft_rate'];
+    $enquiry->cft_profit      = (float) $cftRateDetails['cft_profit'];
+    $enquiry->total_cft_cost  = (float) $cftRateDetails['total_cost'];
+
+    foreach ($items as &$item) {
+        $item['rate_type']  = $enquiry->cft_rate_type;
+        $item['cft_rate']   = $enquiry->cft_rate;
+        $item['cft_profit'] = $enquiry->cft_profit;
+    }
+
+    /* -------------------- KM CALCULATION -------------------- */
+    $kmDistance = (float) ($enquiry->km_distance ?? 0);
+    $cftId = $enquiry->cft_id;
+
+    $kmRateDetails = $this->getKmRate($kmDistance, $cftId);
+
+    $enquiry->km_distance    = round($kmDistance, 2);
+    $enquiry->km_rate        = (float) $kmRateDetails['km_rate'];
+    $enquiry->km_profit      = (float) $kmRateDetails['km_profit'];
+    $enquiry->km_rate_type   = strtoupper($kmRateDetails['rate_type']);
+    $enquiry->total_km_cost  = (float) $kmRateDetails['total_km_cost'];
+
+    /* -------------------- FINAL TOTALS -------------------- */
+    $enquiry->items            = $items;
+    $enquiry->total_cft        = round($totalCft, 2);
+    $enquiry->total_amount     = round($enquiry->total_cft_cost, 2);
+    $enquiry->grand_total_cost = $enquiry->total_amount + $enquiry->total_km_cost;
+
+    /* -------------------- PAYMENTS -------------------- */
+    $allPayments = Payment::where('enquiry_id', $id)
+        ->orderByDesc('id')
+        ->get();
+
+    $lastPayment = $allPayments->first();
+    $advancePaid = $allPayments->sum('amount');
+
+    $quotationAmount = $enquiry->grand_total_cost;
+
+    return view('admin.enquiry.field-report', compact(
+        'title',
+        'enquiry',
+        'customer',
+        'allPayments',
+        'lastPayment',
+        'advancePaid',
+        'quotationAmount'
+    ));
+}
+
 
     /**
      * Show the form for editing the specified resource.
@@ -308,8 +390,6 @@ class EnquiryController extends Controller
         return view('get-other-enquiry', compact('title', 'enquiry_details'));
     }
 
-    
-   
     private function getCftRate($product_cft)
     {
         $rateInfo = CFTModel::where('from_cft', '<=', $product_cft)
@@ -318,6 +398,7 @@ class EnquiryController extends Controller
     
         if (!$rateInfo) {
             return [
+                'cft_id'     => 0,     
                 'cft_rate'      => 0,
                 'cft_profit'    => 0,
                 'total_cost'    => 0,
@@ -364,6 +445,7 @@ class EnquiryController extends Controller
         }
     
         return [
+            'cft_id'        => $rateInfo->id,   // 🔥 IMPORTANT
             'cft_rate'      => $rate,
             'cft_profit'    => $profit,
             'total_cost'    => round($totalCost, 2),
@@ -373,7 +455,8 @@ class EnquiryController extends Controller
     }
 
 
-    private function getKmRate($km_distance, $cft_id)
+    
+     private function getKmRate(float $km_distance, int $cft_id): array
     {
         $km_distance = (int) ceil($km_distance);
     
@@ -383,7 +466,13 @@ class EnquiryController extends Controller
             ->where('to_km', '>=', $km_distance)
             ->first();
     
+        // ❌ No slab found
         if (!$rateInfo) {
+            Log::warning('KM SLAB NOT FOUND', [
+                'km'     => $km_distance,
+                'cft_id' => $cft_id
+            ]);
+    
             return [
                 'km_rate'       => 0,
                 'km_profit'     => 0,
@@ -393,9 +482,14 @@ class EnquiryController extends Controller
             ];
         }
     
-        $rateRaw = (int) $rateInfo->rate_type; 
+        // ✅ Normalize numeric rate type
+        $rateRaw = (int) $rateInfo->rate_type; // 0 = FIXED, 1 = PER KM
         $rate    = (float) $rateInfo->km_rate;
         $profit  = (float) $rateInfo->km_profit;
+    
+        $totalAmount = 0;
+        $totalKmCost = 0;
+        $rateType    = 'INVALID';
     
         if ($rateRaw === 0) {
             $rateType    = 'FIXED';
@@ -406,19 +500,22 @@ class EnquiryController extends Controller
             $totalAmount = $rate * $km_distance;
             $totalKmCost = $totalAmount + $profit;
         } else {
-            $rateType    = 'INVALID';
-            $totalAmount = 0;
-            $totalKmCost = 0;
+            Log::error('INVALID KM RATE TYPE IN DB', [
+                'rate_type' => $rateInfo->rate_type,
+                'id'        => $rateInfo->id ?? null
+            ]);
         }
     
         return [
+             'cft_id'        => $rateInfo->id,
             'km_rate'       => $rate,
             'km_profit'     => $profit,
             'total_km_cost' => round($totalKmCost, 2),
-            'rate_type'     => strtoupper($rateType),
+            'rate_type'     => $rateType,
             'rate_profile'  => round($totalAmount, 2)
         ];
     }
+
 
 
      private function getCftId($totalCft)

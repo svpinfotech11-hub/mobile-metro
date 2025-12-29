@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\PolicyController;
 use App\Http\Controllers\Api\VendorController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\UserEnquiryController;
+use App\Http\Controllers\UserProductController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ProductSubCategoryController;
 
@@ -170,6 +172,10 @@ Route::get('km-rate/cft/{cftId}', [KMRateController::class, 'showKmDetails'])->n
 
 Route::get('/get-subcategory/{service_id}', [ProductController::class, 'getSubcategory']);
 
+Route::get('field-report/{id}', [EnquiryController::class, 'fieldReport'])
+    ->name('admin.enquiry.field-report');
+
+
   Route::resource('app/admin-pickupboy', PickupboyController::class)
     ->names([
       'index'  =>  'app.admin-pickupboy.index',
@@ -180,6 +186,21 @@ Route::get('/get-subcategory/{service_id}', [ProductController::class, 'getSubca
       'update' =>  'app.admin-pickupboy.update',
       'destroy' =>  'app.admin-pickupboy.destroy'
     ]);
+
+    Route::get('pages/users/create', [UserProductController::class, 'create'])
+    ->name('pages.users.create');
+
+Route::post('pages/users/create', [UserProductController::class, 'store'])
+    ->name('pages.users.store');
+
+Route::get('/users/{id}/otp', [UserProductController::class, 'showOtpForm'])
+    ->name('pages.users.otp');
+
+Route::post('/users/otp-verify', [UserProductController::class, 'verifyOtp'])
+    ->name('users.otp.verify');
+
+Route::get('pages/users/form', [UserEnquiryController::class, 'formss'])
+    ->name('pages.users.form');
 });
 
 
@@ -214,11 +235,20 @@ Route::get('product_subcategory/create', [ProductSubCategoryController::class, '
     ->name('admin.product_subcategory.destroy');
 
 
-    Route::get('/get-product-subcategory/{service_id}', function($service_id){
-    return DB::table('tbl_product_subcategory')
-        ->where('service_id', $service_id)
-        ->get();
+  Route::get('/get-product-subcategory/{service_id}', function($service_id){
+  return DB::table('tbl_product_subcategory')
+      ->where('service_id', $service_id)
+      ->get();
 });
+    Route::get('/admin/enquiries', [UserEnquiryController::class, 'index'])->name('admin.enquiries.index');
+
+    Route::get('/admin/services', [UserEnquiryController::class, 'servicesMethod'])->name('admin.enquiries.services');
 
 
+Route::delete('/enquiries/{id}', [UserEnquiryController::class, 'destroy'])
+    ->name('enquiries.destroy');
+
+
+
+Route::get('/api/subcategory-detail/{id}', [UserProductController::class, 'getSubCategoryDetail']);
 

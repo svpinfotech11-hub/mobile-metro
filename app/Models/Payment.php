@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Razorpay\Api\Customer;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Payment extends Model
 {
@@ -64,4 +65,11 @@ class Payment extends Model
     {
         return $this->payment_status === 'success';
     }
+
+    // app/Models/Payment.php
+    public function customer()
+    {
+        return $this->belongsTo(CustomerModel::class);
+    }
+
 }

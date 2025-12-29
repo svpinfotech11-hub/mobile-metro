@@ -30,7 +30,7 @@
                                             @foreach($services as $s)
                                             <option value="{{ $s->id }}"
                                                 {{ $subcategory->service_id == $s->id ? 'selected' : '' }}>
-                                                {{ $s->service_name }}
+                                            {{ $s->sub_categoryname }}  -  {{ $s->service_name }}
                                             </option>
                                             @endforeach
                                         </select>

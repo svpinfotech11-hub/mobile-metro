@@ -10,7 +10,11 @@
     line-height: 1.5;
     border-radius: .2rem;
   }
-
+a.btn.btn-info.btn-sm.dsf {
+    width: 26px;
+    font-size: 16px;
+    height: 30px;
+}
   i.fas.fa-trash-alt {
     font-size: 14px !important;
   }
@@ -149,6 +153,9 @@
                     <a href="{{ route('app.admin-enquiry.show', $value->id) }}">
                       <i class="fa fa-eye text-primary" style="font-size:16px;"></i>
                     </a>
+                  <a href="{{ route('admin.enquiry.field-report', $value->id) }}" class="btn btn-info btn-sm dsf">
+                    <i class="fa fa-file-alt" aria-hidden="true"></i>
+                  </a>
 
                     <form action="{{ route('admin-packers-movers-destroy', $value->id) }}" method="POST" style="display:inline;" class="ml-1">
                       @csrf

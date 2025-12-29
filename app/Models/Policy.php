@@ -37,6 +37,9 @@ class Policy extends Model
         'youtube_icon',
 
         'map_location_link',
-        'share_app_link'
+        'share_app_link',
+        'chat_number',
+        'call_number',
+        'website_link'
     ];
 }

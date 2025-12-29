@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Razorpay\Api\Api;
+use App\Models\Payment;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -182,4 +183,25 @@ class PaymentController extends Controller
             ]
         ]);
     }
+
+    // Fetch payment details by customer ID
+    public function getPaymentsByCustomer($customerId)
+    {
+        $payments = Payment::with('customer')
+            ->where('customer_id', $customerId)
+            ->get();
+
+        if ($payments->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No payments found for this customer.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $payments
+        ]);
+    }
+
 }

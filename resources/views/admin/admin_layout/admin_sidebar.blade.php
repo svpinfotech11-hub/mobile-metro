@@ -244,6 +244,38 @@
             </a>
            
           </li>
+
+
+           <li class="nav-item">
+            <a href="{{ route('pages.users.form');}}" class="nav-link">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+               Create Inventory
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+
+
+          <li class="nav-item">
+            <a href="{{ route('admin.enquiries.index');}}" class="nav-link">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+               User Inventory Record
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ route('admin.enquiries.services');}}" class="nav-link">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+               User Services Record
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
            
            <!-- <li class="nav-item">
             <a href="#" class="nav-link">

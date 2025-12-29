@@ -29,4 +29,10 @@ class CustomerModel extends Model
     {
         return $this->hasMany(EnquiryserviceModel::class, 'customer_id');
     }
+    // app/Models/Customer.php
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
 }

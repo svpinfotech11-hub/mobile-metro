@@ -2,13 +2,16 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\Api\PolicyController;
 use App\Http\Controllers\Api\VendorController;
 use App\Http\Controllers\Api\EnquiryController;
 use App\Http\Controllers\Api\MainApiController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\UserEnquiryController;
+use App\Http\Controllers\UserProductController;
 use App\Http\Controllers\Api\CustomerController;
-use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,3 +85,21 @@ Route::get('/products', [EnquiryController::class, 'getProducts']);
 
 Route::get('/enquiry/{id}', [EnquiryController::class, 'showdata']);
 Route::put('/enquiry-update/{id}', [EnquiryController::class, 'updateData']);
+
+
+Route::get('/get-services-all', [UserProductController::class, 'getServicessss']);
+Route::get('/get-subcategories/{categoryId}', [UserProductController::class, 'getSubCategories']);
+Route::get('get-product-subcategories', [UserProductController::class, 'getProductSubCategories']);
+
+
+Route::get('get-products', [UserProductController::class, 'getProducts']);
+
+
+Route::post('/user-enquiry/store', [UserEnquiryController::class, 'store'])
+    ->name('pages.users.store');
+
+
+Route::post('/payment-success', [UserEnquiryController::class, 'storea']);
+
+
+Route::get('/customer/{id}/payments', [PaymentController::class, 'getPaymentsByCustomer']);
